@@ -4,7 +4,7 @@
 #include<math.h>
 #include<time.h>
 
-#define SIZE 12
+#define SIZE 15
 #define TRUE 1
 
 char get_input();
@@ -160,76 +160,115 @@ void get_player_loc(char lcl_map[SIZE][SIZE], int temp[2]){
 }
 
 int ghost_valid(char lcl_map[SIZE][SIZE], int r, int c){
-	if(r>=0 && r<SIZE && c>=0 && c<SIZE && lcl_map[r][c] == ' '){
+	if(r>=0 && r<SIZE && c>=0 && c<SIZE && (lcl_map[r][c] == 'o' || lcl_map[r][c] == ' ' || lcl_map[r][c] == 'G')){
 		return 1;
 	}
 
 	return 0;
 }
 
+char prev = 'o';
 void move_ghost(char lcl_map[SIZE][SIZE], int r, int c){
-	//Top and left
-	if(lcl_map[r-1][c] == '#' && lcl_map[r][c-1] == '#'){
-		int pick = rand() % 2;
-		if(pick){
-			while(lcl_map[r][c+1] == '#'){
-				ghost_right(lcl_map, r, c);
-			}
+	if(prev == 'w'){
+		if(lcl_map[r-1][c] == '#'){
+			prev = 'o';
 		}
 		else{
-			while(lcl_map[r+1][c] == '#'){
-				ghost_down(lcl_map, r, c);
-			}
+			ghost_up(lcl_map,r,c);
 		}
 	}
-	//Top and right
-	else if(lcl_map[r-1][c] == '#' && lcl_map[r][c+1] == '#'){
-		int pick = rand() % 2;
-		if(pick){
-			while(lcl_map[r][c-1] == '#'){
-				ghost_left(lcl_map, r, c);
-			}
+	else if(prev == 's'){
+		if(lcl_map[r+1][c] == '#'){
+			prev = 'o';
 		}
 		else{
-			while(lcl_map[r+1][c] == '#'){
-				ghost_down(lcl_map, r, c);
-			}
+			ghost_down(lcl_map,r,c);
 		}
 	}
-	//Bottom and left
-	else if(lcl_map[r+1][c] == '#' && lcl_map[r][c-1] == '#'){
-		int pick = rand() % 2;
-		if(pick){
-			while(lcl_map[r][c+1] == '#'){
-				ghost_right(lcl_map, r, c);
-			}
+	else if(prev == 'a'){
+		if(lcl_map[r][c-1] == '#'){
+			prev = 'o';
 		}
 		else{
-			while(lcl_map[r-1][c] == '#'){
-				ghost_up(lcl_map, r, c);
-			}
+			ghost_left(lcl_map,r,c);
 		}
 	}
-	//Bottom and right
+	else if(prev == 'd'){
+		if(lcl_map[r][c+1] == '#'){
+			prev = 'o';
+		}
+		else{
+			ghost_right(lcl_map,r,c);
+		}
+	}
 	else{
-		int pick = rand() % 2;
-		if(pick){
-			while(lcl_map[r][c-1] == '#'){
-				ghost_left(lcl_map, r, c);
+		//Top and left
+		if(lcl_map[r-1][c] == '#' && lcl_map[r][c-1] == '#'){
+			int pick = rand() % 2;
+			if(pick){
+				ghost_right(lcl_map, r, c);
+				prev = 'd';
+			}
+			else{
+				ghost_down(lcl_map, r, c);
+				prev = 's';
 			}
 		}
-		else{
-			while(lcl_map[r-1][c] == '#'){
+		//Top and right
+		else if(lcl_map[r-1][c] == '#' && lcl_map[r][c+1] == '#'){
+			int pick = rand() % 2;
+			if(pick){
+				ghost_left(lcl_map, r, c);
+				prev = 'a';
+			}
+			else{
+				ghost_down(lcl_map, r, c);
+				prev = 's';
+			}
+		}
+		//Bottom and left
+		else if(lcl_map[r+1][c] == '#' && lcl_map[r][c-1] == '#'){
+			int pick = rand() % 2;
+			if(pick){
+				ghost_right(lcl_map, r, c);
+				prev = 'd';
+			}
+			else{
 				ghost_up(lcl_map, r, c);
+				prev = 'w';
+			}
+		}
+		//Bottom and right
+		else{
+			int pick = rand() % 2;
+			if(pick){
+				ghost_left(lcl_map, r, c);
+				prev = 'a';
+			}
+			else{
+				ghost_up(lcl_map, r, c);
+				prev = 'w';
 			}
 		}
 	}
+	
 }
+
 
 int ghost_down(char lcl_map[SIZE][SIZE], int r, int c){
 	if(ghost_valid(lcl_map, r+1, c)){
 		lcl_map[r][c] = ' ';
-		r += 1;
+		if(lcl_map[r+1][c] == 'o'){
+			if(lcl_map[r+2][c] == '#'){
+				//Do nothing
+			}
+			else{
+				r += 2;
+			}
+		}
+		else{
+			r += 1;
+		}
 		lcl_map[r][c] = 'G';
 	}
 }
@@ -237,7 +276,17 @@ int ghost_down(char lcl_map[SIZE][SIZE], int r, int c){
 int ghost_up(char lcl_map[SIZE][SIZE], int r, int c){
 	if(ghost_valid(lcl_map, r-1, c)){
 		lcl_map[r][c] = ' ';
-		r -= 1;
+		if(lcl_map[r-1][c] == 'o'){
+			if(lcl_map[r-2][c] == '#'){
+				//Do nothing
+			}
+			else{
+				r -= 2;
+			}
+		}
+		else{
+			r -= 1;
+		}
 		lcl_map[r][c] = 'G';
 	}
 }
@@ -245,7 +294,17 @@ int ghost_up(char lcl_map[SIZE][SIZE], int r, int c){
 int ghost_left(char lcl_map[SIZE][SIZE], int r, int c){
 	if(ghost_valid(lcl_map, r, c-1)){
 		lcl_map[r][c] = ' ';
-		c -= 1;
+		if(lcl_map[r][c-1] == 'o'){
+			if(lcl_map[r][c-2] == '#'){
+				//Do nothing
+			}
+			else{
+				c -= 2;
+			}
+		}
+		else{
+			c -= 1;
+		}
 		lcl_map[r][c] = 'G';
 	}
 }
@@ -253,7 +312,18 @@ int ghost_left(char lcl_map[SIZE][SIZE], int r, int c){
 int ghost_right(char lcl_map[SIZE][SIZE], int r, int c){
 	if(ghost_valid(lcl_map, r, c+1)){
 		lcl_map[r][c] = ' ';
-		c += 1;
+		if(lcl_map[r][c+1] == 'o'){
+			if(lcl_map[r][c+2] == '#'){
+				//Do nothing
+			}
+			else{
+				c += 2;
+			}
+			
+		}
+		else{
+			c += 1;
+		}
 		lcl_map[r][c] = 'G';
 	}
 }
@@ -281,18 +351,21 @@ int main(){
 	while(TRUE){
 		system("clear");
 
-		char map[SIZE][SIZE] = { {'#','#','#','#','#','#','#','#','#','#','#','#'},
-								 {'#','G',' ',' ','#',' ',' ',' ',' ',' ',' ','#'},
-								 {'#',' ',' ',' ','#','#',' ',' ',' ',' ',' ','#'},
-								 {'#',' ','#',' ',' ','#',' ','#','#','#',' ','#'},
-								 {'#',' ','#',' ',' ','#',' ','#',' ',' ',' ','#'},
-								 {'#',' ','#',' ','#','#',' ','#','#',' ',' ','#'},
-								 {'#',' ','#',' ','#','P',' ',' ','#',' ',' ','#'},
-								 {'#',' ','#',' ','#',' ',' ',' ','#',' ',' ','#'},
-								 {'#','#','#',' ',' ',' ',' ',' ','#',' ',' ','#'},
-								 {'#',' ',' ',' ',' ','#','#','#','#',' ',' ','#'},
-								 {'#',' ',' ',' ','#','#',' ',' ',' ',' ','G','#'},
-								 {'#','#','#','#','#','#','#','#','#','#','#','#'}};
+		char map[SIZE][SIZE] = { {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
+								 {'#',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
+								 {'#',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ','#'},
+								 {'#',' ',' ',' ',' ','#',' ',' ','#','#',' ',' ',' ',' ','#'},
+								 {'#',' ','#',' ',' ','#',' ',' ',' ','#',' ',' ',' ',' ','#'},
+								 {'#',' ','#',' ','#','#',' ',' ',' ','#',' ',' ',' ',' ','#'},
+								 {'#',' ','#',' ','#','P',' ',' ',' ','#',' ',' ',' ',' ','#'},
+								 {'#','G',' ',' ',' ',' ',' ',' ',' ','#','#','#',' ',' ','#'},
+								 {'#',' ',' ','#',' ',' ',' ',' ',' ',' ',' ','#',' ',' ','#'},
+								 {'#','#','#','#',' ',' ',' ','#','#',' ',' ','#',' ',' ','#'},
+								 {'#',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ','#'},
+								 {'#',' ',' ',' ','#','#','#','#',' ',' ',' ',' ',' ',' ','#'},
+								 {'#',' ',' ',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ','#'},
+								 {'#',' ',' ',' ',' ',' ',' ',' ',' ',' ','#',' ',' ','G','#'},
+								 {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'}};
 	
 		int points = 0;
 		int moves = 0;
@@ -318,6 +391,19 @@ int main(){
 			switch (x){
 			//Move up
 			case 'w':{
+				if(player_caught(map, row, column)){
+					caught = 1;
+					break;
+				}
+				for(int a = 0; a < SIZE; a++){
+					for(int b = 0; b < SIZE; b++){
+						if(map[a][b] == 'G'){
+							int temp_a = a;
+							int temp_b = b;
+							move_ghost(map, temp_a, temp_b);
+						}
+					}
+				}
 				if(is_valid(map, row-1, column)){
 					if(map[row-1][column] == 'o'){
 						points++;
@@ -327,24 +413,25 @@ int main(){
 					moves += 1;
 
 					move(map, row, column, points);
-					if(player_caught(map, row, column)){
-						caught = 1;
-						break;
-					}
+					
 				}
-				for(int a = 0; a < SIZE; a++){
-						for(int b = 0; b < SIZE; b++){
-							if(map[a][b] == 'G'){
-								int temp_a = a;
-								int temp_b = b;
-								move_ghost(map, temp_a, temp_b);
-							}
-						}
-					}
 				break;
 			}
 			//Move left
 			case 'a':{
+				if(player_caught(map, row, column)){
+					caught = 1;
+					break;
+				}
+				for(int a = 0; a < SIZE; a++){
+					for(int b = 0; b < SIZE; b++){
+						if(map[a][b] == 'G'){
+							int temp_a = a;
+							int temp_b = b;
+							move_ghost(map, temp_a, temp_b);
+						}
+					}
+				}
 				if(is_valid(map, row, column-1)){
 					if(map[row][column-1] == 'o'){
 						points++;
@@ -359,19 +446,23 @@ int main(){
 						break;
 					}
 				}
-				for(int a = 0; a < SIZE; a++){
-						for(int b = 0; b < SIZE; b++){
-							if(map[a][b] == 'G'){
-								int temp_a = a;
-								int temp_b = b;
-								move_ghost(map, temp_a, temp_b);
-							}
-						}
-					}
 				break;
 			}
 			//Move down
 			case 's':{
+				if(player_caught(map, row, column)){
+					caught = 1;
+					break;
+				}
+				for(int a = 0; a < SIZE; a++){
+					for(int b = 0; b < SIZE; b++){
+						if(map[a][b] == 'G'){
+							int temp_a = a;
+							int temp_b = b;
+							move_ghost(map, temp_a, temp_b);
+						}
+					}
+				}
 				if(is_valid(map, row+1, column)){
 					if(map[row+1][column] == 'o'){
 						points++;
@@ -386,19 +477,23 @@ int main(){
 						break;
 					}
 				}
-				for(int a = 0; a < SIZE; a++){
-						for(int b = 0; b < SIZE; b++){
-							if(map[a][b] == 'G'){
-								int temp_a = a;
-								int temp_b = b;
-								move_ghost(map, temp_a, temp_b);
-							}
-						}
-					}
 				break;
 			}
 			//Move right
 			case 'd':{
+				if(player_caught(map, row, column)){
+					caught = 1;
+					break;
+				}
+				for(int a = 0; a < SIZE; a++){
+					for(int b = 0; b < SIZE; b++){
+						if(map[a][b] == 'G'){
+							int temp_a = a;
+							int temp_b = b;
+							move_ghost(map, temp_a, temp_b);
+						}
+					}
+				}
 				if(is_valid(map, row, column+1)){
 					if(map[row][column+1] == 'o'){
 						points++;
@@ -413,15 +508,6 @@ int main(){
 						break;
 					}
 				}
-				for(int a = 0; a < SIZE; a++){
-						for(int b = 0; b < SIZE; b++){
-							if(map[a][b] == 'G'){
-								int temp_a = a;
-								int temp_b = b;
-								move_ghost(map, temp_a, temp_b);
-							}
-						}
-					}
 				break;
 			}
 			default:
