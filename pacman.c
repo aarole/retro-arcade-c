@@ -3,6 +3,7 @@
 #include<string.h>
 #include<math.h>
 #include<time.h>
+#include"json/ext_time.c"
 
 #define SIZE 30
 #define TRUE 1
@@ -26,6 +27,18 @@ void red();
 void green();
 void yellow();
 void reset();
+
+struct Record{
+	char name[30];
+	int score;
+	char date[10];
+	char day[10];
+};
+
+struct Node{
+	struct Record data;
+	struct Node* next;
+};
 
 char get_input(){
 	char input;
@@ -206,7 +219,7 @@ void get_player_loc(char lcl_map[SIZE][SIZE], int temp[2]){
 }
 
 int ghost_valid(char lcl_map[SIZE][SIZE], int r, int c){
-	if(r>=0 && r<SIZE && c>=0 && c<SIZE && (lcl_map[r][c] == 'o' || lcl_map[r][c] == ' ' || lcl_map[r][c] == 'G')){
+	if(r>=0 && r<SIZE && c>=0 && c<SIZE && (lcl_map[r][c] == 'o' || lcl_map[r][c] == ' ')){
 		return 1;
 	}
 
@@ -442,6 +455,7 @@ void reset(){
 
 int main(){
 	char player[25];
+	struct Node* head = (struct Node*)malloc(sizeof(struct Node));
 
 	while(TRUE){
 		system("clear");
@@ -489,9 +503,60 @@ int main(){
 		int row = coord[0];
 		int column = coord[1];
 
-		printf("Player name: ");
+		printf("Player name (no spaces): ");
 		scanf("%s", &player);
 
+		FILE* leaderboard;
+		leaderboard = fopen("leaderboard_pacman.txt","r");
+		char buffer[255];
+		
+		if(leaderboard == NULL){
+			printf("Error: Leaderboard file not opened.\n");
+			return 1;
+		}
+		else{
+			printf("File opened.\n");
+		}
+
+		struct Node* current = head;
+
+		char *names[5];
+		int scores[5];
+		char *dates[5];
+		char *days[5];
+		
+		int i = 0;
+		while(fgets(buffer,255,leaderboard) != NULL){
+			char delim[] = " ";
+			char *ptr = strtok(buffer,delim);
+			char *data[4];
+			int z = 0;
+			while(ptr){
+				data[z++] = ptr;
+				ptr = strtok(NULL,delim);
+			}
+			
+			strcpy(names[i],data[0]);
+			scores[i] = atoi(data[1]);
+			strcpy(dates[i], data[2]);
+			strcpy(days[i], data[3]);
+			printf("%s %d %s %s",names[i++],scores[i++],dates[i++],days[i++]);
+			//sscanf(buffer, "%s %s %s %s", names[i], scores[i], dates[i],days[i]);
+			i++;
+		}
+		//exit(0);
+		/*while(fgets(buffer,255,leaderboard)){
+			sscanf(buffer,"%s %d %s %s",&names[i],&scores[i],&dates[i],&days[i]);
+			i++;
+		}*/
+		printf("\nName\tScore\tAchievement Date and Day\n");
+		int f = 0;
+		while(f<5){
+			printf("%s %d %s %s\n",names[f++],scores[f++],dates[f++],days[f++]);
+		}
+		exit(0);
+
+		/*
 		time_t start = time(NULL);
 
 		int caught = 0;
@@ -507,7 +572,7 @@ int main(){
 		}
 		//start = 1;
 
-		while(points != 10){
+		while(points != 5){
 			char x = get_input();
 			print_map(map, points);
 
@@ -646,8 +711,43 @@ int main(){
 		time_t end = time(NULL);
 
 		if(!caught){
+			int score = (int)(end-start);
 			printf("\nGame Complete\n");
-			printf("%s's score: %ld seconds\n", player, (end-start));
+			printf("%s's score: %d seconds\n", player, score);
+
+			char cdate[10];
+			char* cday;
+			get_date(cdate, cday);
+			int owpos = 0;
+			for(int a = 0; a < 5; a++){
+				if(score < scores[a]){
+					owpos = a;
+				}
+			}
+			for(int b = 4; b > (5 - (owpos + 1)); b--){
+				names[b] = names[b-1];
+				scores[b] = scores[b-1];
+				dates[b] = dates[b-1];
+				days[b] = days[b-1];
+			}
+			names[owpos] = player;
+			scores[owpos] = score;
+			dates[owpos] = cdate;
+			days[owpos] = cday;
+			printf("\n==============================");
+			printf("\n\tLeaderboard:");
+			printf("\n==============================");
+
+			printf("\nName\tScore\tAchievement Date and Day");
+			for(int c = 0; c < 5; c++){
+				printf("\n%s\t%d\t%s\t%s",names[i],scores[i],dates[i],days[i]);
+			}
+			fclose(leaderboard);
+			leaderboard = fopen("leaderboard_pacman.txt","w");
+			for(int d = 0; d < 5; d++){
+				fprintf(leaderboard,"%s %d %s %s",player,score,cdate,cday);
+			}
+			fclose(leaderboard);
 		}
 
 		printf("\nRestart? (y/n): \n");
@@ -655,8 +755,10 @@ int main(){
 		if(getchar() == 'n'){
 			break;
 		}
+		*/
 	}
 	
 
 	return 0;
+	
 }

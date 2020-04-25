@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "cJSON.h"
 #include "cJSON.c"
 #include <curl/curl.h>
 
-char* get_current_time(){
+void get_date(char current_date[10], char* current_day){
 	char URL[100] = "http://worldclockapi.com/api/json/utc/now";
 	
 	FILE* output_file;
@@ -37,10 +38,20 @@ char* get_current_time(){
 	
 	const cJSON* json_root = cJSON_Parse(json_string);
 
-	const cJSON* time_stamp = cJSON_GetObjectItem(json_root, "currentDateTime");
-	const cJSON* time_zone = cJSON_GetObjectItem(json_root, "timeZoneName");
-	char* current_time = malloc(5);
-	strncpy(current_time,time_stamp->valuestring+11,5);
-	
-	return current_time;
+	const cJSON* datetime_stamp = cJSON_GetObjectItem(json_root, "currentDateTime");
+	const cJSON* day_of_the_week = cJSON_GetObjectItem(json_root, "dayOfTheWeek");
+	//const cJSON* time_zone = cJSON_GetObjectItem(json_root, "timeZoneName");
+	//char* current_time = malloc(5);
+	//char* current_day = malloc(10);
+	//char current_date[10];
+	strncpy(current_day,day_of_the_week->valuestring,strlen(day_of_the_week->valuestring));
+	//strncpy(current_time,datetime_stamp->valuestring+11,5);
+	strncpy(current_date,datetime_stamp->valuestring,10);
+	current_date[10] = '\0';
+	/*
+	printf("Time zone: %s\n",time_zone->valuestring);
+	printf("Current time: %s\n",current_time);
+	printf("Date: %s\n",current_date);
+	printf("Day: %s\n",current_day);
+	*/
 }
