@@ -11,27 +11,27 @@ The games included in this program are:
   <li>Snake (Pending)</li>
 </ul>
 
-<b>Dependencies:</b>
+# Dependencies
 <ul>
   <li>cJSON</li>
   <li>libcurl</li>
 </ul>
 The dependencies are either included with the program or are present by default on UNIX systems. 
-
-<b>Downloading the program:</b>
+<br>
+# Downloading the program
 This program can be downloaded with:
 <ul>
   <li><i>git clone https://github.com/aarole/retro-arcade-c.git</i></li>
 </ul>
 
-<b>Compiling the program:</b>
+# Compiling the program
 This program can be compiled by following the steps below:
 <ul>
   <li><i>cd retro-arcade-c</i></li>
   <li><i>make</i></li>
 </ul>
 
-<b>Running the program:</b>
+# Running the program
 This program can be run following the steps below:
 <ul>
   <li>Ensure you are in the <i>retro-arcade-c</i> directory</li>
