@@ -7,7 +7,7 @@
 #define SIZE 30
 #define TRUE 1
 
-char get_input(){
+char input(){
 	char input;
 	
 	system("/bin/stty raw");
@@ -19,7 +19,7 @@ char get_input(){
 	return input;
 }
 
-void print_map(char lcl_map[SIZE][SIZE], int pts){
+void print_bg(char lcl_map[SIZE][SIZE], int pts){
 	system("clear");
 	generate_point(lcl_map);
 	generate_ghost(lcl_map,pts);
@@ -30,19 +30,19 @@ void print_map(char lcl_map[SIZE][SIZE], int pts){
 			char pt = lcl_map[i][j];
 			switch(pt){
 				case '#':
-					red();
+					tred();
 					printf("%c ", pt);
-					reset();
+					treset();
 					break;
 				case 'S':
-					green();
+					tgreen();
 					printf("%c ", pt);
-					reset();
+					treset();
 					break;
 				case 'o':
-					yellow();
+					tyellow();
 					printf("%c ", pt);
-					reset();
+					treset();
 					break;
 				default:
 					printf("%c ", pt);
@@ -53,7 +53,7 @@ void print_map(char lcl_map[SIZE][SIZE], int pts){
 	}
 }
 
-int is_valid(char lcl_map[SIZE][SIZE], int r, int c){
+int valid(char lcl_map[SIZE][SIZE], int r, int c){
 	if(r>=0 && r<SIZE && c>=0 && c<SIZE && (lcl_map[r][c] == ' ' || lcl_map[r][c] == 'o') && lcl_map[r][c] != 'G'){
 		return 1;
 	}
@@ -61,7 +61,7 @@ int is_valid(char lcl_map[SIZE][SIZE], int r, int c){
 	return 0;
 }
 
-int generate_point(char lcl_map[SIZE][SIZE]){
+int generate_pfood(char lcl_map[SIZE][SIZE]){
 	int exists = 0;
 	int p_row = 0;
 	int p_col = 0;
@@ -109,23 +109,46 @@ int generate_point(char lcl_map[SIZE][SIZE]){
 	}
 }
 
-void move_snake(char lcl_map[SIZE][SIZE], char key){
+void snake_up(){
 
 }
 
-void yellow(){
+void move_snake(char lcl_map[SIZE][SIZE], char key, int state){
+	switch (key){
+	case 'w':{
+		if(state){
+			
+		}
+		
+		break;
+	}
+	case 'a':{
+		break;
+	}
+	case 's':{
+		break;
+	}
+	case 'd':{
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void tyellow(){
 	printf("\033[1;33m");
 }
 
-void red(){
+void tred(){
 	printf("\033[1;31m");
 }
 
-void green(){
+void tgreen(){
 	printf("\033[1;32m");
 }
 
-void reset(){
+void treset(){
 	printf("\033[0m");
 	printf("\e[0m");
 }
@@ -164,6 +187,7 @@ int snake(){
 
 	int max_size = pow(SIZE,2);
 	char snake[max_size];
+	int game_over = 0;
 
 	system("../main");
 }

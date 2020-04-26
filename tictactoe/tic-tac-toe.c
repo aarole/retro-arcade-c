@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 int tictactoe()
 {
@@ -148,7 +149,7 @@ int tictactoe()
             else
             {
                 
-                system("../main");
+                return 0;
             }
             
             return 0;

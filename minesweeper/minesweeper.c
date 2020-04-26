@@ -335,8 +335,8 @@ void playAgain() {
 
     start();
   } else {
-    printf("\n\nThanks for playing! Bye.");
-    system("../main");
+    printf("\n\nThanks for playing! Bye.\n");
+    return;
   }
 }
 

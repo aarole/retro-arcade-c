@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include "cJSON.h"
 #include "cJSON.c"
 #include <curl/curl.h>
 
-void get_date(char current_date[10], char* current_day){
+void get_date(char current_date[10]){
 	char URL[100] = "http://worldclockapi.com/api/json/utc/now";
 	
 	FILE* output_file;
@@ -44,7 +43,7 @@ void get_date(char current_date[10], char* current_day){
 	//char* current_time = malloc(5);
 	//char* current_day = malloc(10);
 	//char current_date[10];
-	strncpy(current_day,day_of_the_week->valuestring,strlen(day_of_the_week->valuestring));
+	//strncpy(current_day,day_of_the_week->valuestring,strlen(day_of_the_week->valuestring));
 	//strncpy(current_time,datetime_stamp->valuestring+11,5);
 	strncpy(current_date,datetime_stamp->valuestring,10);
 	current_date[10] = '\0';

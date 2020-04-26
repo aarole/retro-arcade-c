@@ -4,8 +4,6 @@
 #include<math.h>
 #include<time.h>
 #include<stdbool.h>
-#include"../json/ext_time.c"
-#include"../hotbits/hotbits.c"
 
 #define SIZE 30
 
@@ -779,9 +777,6 @@ int pacman(){
 		}
 		
 	}
-
-	system("../main");
-	
 
 	return 0;
 	

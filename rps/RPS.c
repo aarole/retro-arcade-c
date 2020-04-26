@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "../hotbits/hotbits.c"
 
 //global counters for score
 int playerScore = 0;
@@ -14,7 +15,7 @@ void RPS(char input[10])
       input[i]= tolower(input[i]);
     }
     int conversion = 0;
-    int computer = ((rand() % 3) + 1);
+    int computer = ((get_rand() % 3) + 1);
     //changes player input to an interger
     if (strcmp(input,"rock") ==0)
     {
@@ -74,7 +75,7 @@ void RPS(char input[10])
     //in case error
     else
     {
-        printf("There was an error please try again");
+        printf("There was an error please try again\n");
     } 
     return;
 }    
@@ -84,18 +85,18 @@ int rockpaperscissors()
     //storage for input
     char input[10];
     int yesNo;
-    printf("Welcome to RPS \n");
-    printf("Please Select Rock, Paper, Or Scissor \n");
+    printf("\nWelcome to RPS \n");
+    printf("Please Select Rock, Paper, Or Scissor: ");
     scanf("%s", input); 
+    printf("\n");
     RPS(input);
     printf("The current score is %d - %d\n", playerScore, computerScore);
-    printf("Would you like to play again?\n");
-    printf("1 for Yes, 2 for No.\n");
+    printf("\nWould you like to play again? (1 for Yes, 2 for No): ");
     //player input for continued play
     scanf("%d", &yesNo);
     if (yesNo == 2)
     {
-        system("../main");
+        return 0;
     }
     else
     {
