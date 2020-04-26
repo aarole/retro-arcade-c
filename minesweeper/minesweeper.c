@@ -336,8 +336,7 @@ void playAgain() {
     start();
   } else {
     printf("\n\nThanks for playing! Bye.");
-    (void) getchar();
-    exit(EXIT_SUCCESS);
+    system("../main");
   }
 }
 
@@ -359,7 +358,7 @@ void start() {
   playAgain();
 }
 
-int main(void) {
+int minesweeper() {
 
   start();
 

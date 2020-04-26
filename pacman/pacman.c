@@ -3,11 +3,11 @@
 #include<string.h>
 #include<math.h>
 #include<time.h>
+#include<stdbool.h>
 #include"../json/ext_time.c"
 #include"../hotbits/hotbits.c"
 
 #define SIZE 30
-#define TRUE 1
 
 char get_input();
 void print_map(char [SIZE][SIZE], int );
@@ -135,7 +135,7 @@ int generate_point(char lcl_map[SIZE][SIZE]){
 	int col = 0;
 
 	if(!exists){
-		while(TRUE){
+		while(true){
 			row = (rand() % (SIZE + 1));
 			col = (rand() % (SIZE + 1));
 			int x_rad = abs((row-p_row));
@@ -178,7 +178,7 @@ void generate_ghost(char lcl_map[SIZE][SIZE], int points){
 	int col = 0;
 
 	if(((points > 3 && points <= 6) && count == 4) || ((points > 6) && count == 5)){
-		while(TRUE){
+		while(true){
 			row = (rand() % (SIZE + 1));
 			col = (rand() % (SIZE + 1));
 			int x_rad = abs((row-p_row));
@@ -441,7 +441,7 @@ void place_ghost(char lcl_map[SIZE][SIZE], int p[2]){
 	int x_rad = abs((randx-p_x));
 	int y_rad = abs((randy-p_y));
 
-	while(TRUE){
+	while(true){
 		for(int i = 3; i < SIZE; i++){
 			if(randx % i == 0){
 				for(int j = 3; j < SIZE; j++){
@@ -474,11 +474,11 @@ void reset(){
 	printf("\e[0m");
 }
 
-int main(){
+int pacman(){
 	char player[25];
 	struct Node* head = (struct Node*)malloc(sizeof(struct Node));
 
-	while(TRUE){
+	while(true){
 		system("clear");
 		//New row: {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'}
 		//New col: ,' ',' ',' ',' ','#'
@@ -779,6 +779,8 @@ int main(){
 		}
 		
 	}
+
+	system("../main");
 	
 
 	return 0;

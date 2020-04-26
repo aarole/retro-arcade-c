@@ -79,7 +79,7 @@ void RPS(char input[10])
     return;
 }    
 
-int main()
+int rockpaperscissors()
 {
     //storage for input
     char input[10];
@@ -95,10 +95,10 @@ int main()
     scanf("%d", &yesNo);
     if (yesNo == 2)
     {
-        exit(0);
+        system("../main");
     }
     else
     {
-        main();
+        rockpaperscissors();
     }
 }

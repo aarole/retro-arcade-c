@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-int main()
+int tictactoe()
 {
     
     //keep track of winner
@@ -148,7 +148,7 @@ int main()
             else
             {
                 
-                exit(0);
+                system("../main");
             }
             
             return 0;

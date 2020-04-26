@@ -109,7 +109,7 @@ int generate_point(char lcl_map[SIZE][SIZE]){
 	}
 }
 
-void move_snake(char lcl_map[SIZE][SIZE], char key, ){
+void move_snake(char lcl_map[SIZE][SIZE], char key){
 
 }
 
@@ -130,7 +130,7 @@ void reset(){
 	printf("\e[0m");
 }
 
-int main(){
+int snake(){
 	char map[SIZE][SIZE] = { {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
 							 {'#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
 							 {'#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
@@ -165,5 +165,5 @@ int main(){
 	int max_size = pow(SIZE,2);
 	char snake[max_size];
 
-
+	system("../main");
 }
