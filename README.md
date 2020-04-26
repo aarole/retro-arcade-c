@@ -17,7 +17,7 @@ The games included in this program are:
   <li>libcurl</li>
 </ul>
 The dependencies are either included with the program or are present by default on UNIX systems. 
-<br>
+
 # Downloading the program
 This program can be downloaded with:
 <ul>
