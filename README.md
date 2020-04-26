@@ -28,7 +28,7 @@ This program can be downloaded with:
 This program can be compiled by following the steps below:
 <ul>
   <li><i>cd retro-arcade-c</i></li>
-  <li><i>make</i></li>
+  <li><i>make --always-make</i></li>
 </ul>
 
 # Running the program
