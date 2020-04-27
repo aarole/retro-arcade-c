@@ -21,7 +21,7 @@ int main()
         printf("Total games played on %s: %d\n",today,count);
         printf("__________________________________________________________________________________________\n");
         printf("Select a game:\n");
-        printf("1. Snake\n");
+        printf("1. Snake (upcoming)\n");
         printf("2. Pacman\n");
         printf("3. Tic-Tac-Toe\n");
         printf("4. Minesweeper\n");
@@ -32,6 +32,7 @@ int main()
         {
             case 1:
             {
+		printf("Snake is not ready yet.\n");
                 //snake();
             }
             case 2:

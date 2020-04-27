@@ -341,6 +341,7 @@ void playAgain() {
 }
 
 void start() {
+  system("clear");
   lost = 0; // User hasn't lost yet
   // Build both game boards (one for the user to see,
   // and the one with the mines).

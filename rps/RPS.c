@@ -25,9 +25,13 @@ void RPS(char input[10])
     {
         conversion = 2;
     }
-    else
+    else if(strcmp(input,"scissors") == 0)
     {
         conversion = 3;
+    }
+    else{
+    	printf("Please try again.\n");
+	return;
     }
 
     //check whether the player tied, loss, or won
@@ -43,7 +47,7 @@ void RPS(char input[10])
     }
     else if (conversion == 1 && computer == 3)
     {
-        printf("The computer selected scissor.\n");
+        printf("The computer selected scissors.\n");
         printf("You beat the computer\n");
         playerScore++;
     }
@@ -56,7 +60,7 @@ void RPS(char input[10])
     }
     else if (conversion == 2 && computer == 3)
     {
-        printf("The computer selected scissor.\n");
+        printf("The computer selected scissors.\n");
         printf("You lost to the computer\n");
         computerScore++;
     }    
@@ -85,8 +89,9 @@ int rockpaperscissors()
     //storage for input
     char input[10];
     int yesNo;
+    system("clear");
     printf("\nWelcome to RPS \n");
-    printf("Please Select Rock, Paper, Or Scissor: ");
+    printf("Please Select Rock, Paper, Or Scissors: ");
     scanf("%s", input); 
     printf("\n");
     RPS(input);

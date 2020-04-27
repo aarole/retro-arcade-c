@@ -142,7 +142,7 @@ int tictactoe()
             printf("Would you like to play again? 1 (Yes) | 2 (No): ");
             scanf("%d", &again);
             
-            if(again = 1)
+            if(again == 1)
             {
                 goto a;
             }
