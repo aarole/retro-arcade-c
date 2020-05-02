@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "../hotbits/hotbits.c"
 
 //global counters for score
 int playerScore = 0;
@@ -14,7 +15,7 @@ void RPS(char input[10])
       input[i]= tolower(input[i]);
     }
     int conversion = 0;
-    int computer = ((rand() % 3) + 1);
+    int computer = ((get_rand() % 3) + 1);
     //changes player input to an interger
     if (strcmp(input,"rock") ==0)
     {
@@ -24,9 +25,13 @@ void RPS(char input[10])
     {
         conversion = 2;
     }
-    else
+    else if(strcmp(input,"scissors") == 0)
     {
         conversion = 3;
+    }
+    else{
+    	printf("Please try again.\n");
+	return;
     }
 
     //check whether the player tied, loss, or won
@@ -42,7 +47,7 @@ void RPS(char input[10])
     }
     else if (conversion == 1 && computer == 3)
     {
-        printf("The computer selected scissor.\n");
+        printf("The computer selected scissors.\n");
         printf("You beat the computer\n");
         playerScore++;
     }
@@ -55,7 +60,7 @@ void RPS(char input[10])
     }
     else if (conversion == 2 && computer == 3)
     {
-        printf("The computer selected scissor.\n");
+        printf("The computer selected scissors.\n");
         printf("You lost to the computer\n");
         computerScore++;
     }    
@@ -74,31 +79,32 @@ void RPS(char input[10])
     //in case error
     else
     {
-        printf("There was an error please try again");
+        printf("There was an error please try again\n");
     } 
     return;
 }    
 
-int main()
+int rockpaperscissors()
 {
     //storage for input
     char input[10];
     int yesNo;
-    printf("Welcome to RPS \n");
-    printf("Please Select Rock, Paper, Or Scissor \n");
+    system("clear");
+    printf("\nWelcome to RPS \n");
+    printf("Please Select Rock, Paper, Or Scissors: ");
     scanf("%s", input); 
+    printf("\n");
     RPS(input);
     printf("The current score is %d - %d\n", playerScore, computerScore);
-    printf("Would you like to play again?\n");
-    printf("1 for Yes, 2 for No.\n");
+    printf("\nWould you like to play again? (1 for Yes, 2 for No): ");
     //player input for continued play
     scanf("%d", &yesNo);
     if (yesNo == 2)
     {
-        exit(0);
+        return 0;
     }
     else
     {
-        main();
+        rockpaperscissors();
     }
 }

@@ -335,13 +335,13 @@ void playAgain() {
 
     start();
   } else {
-    printf("\n\nThanks for playing! Bye.");
-    (void) getchar();
-    exit(EXIT_SUCCESS);
+    printf("\n\nThanks for playing! Bye.\n");
+    return;
   }
 }
 
 void start() {
+  system("clear");
   lost = 0; // User hasn't lost yet
   // Build both game boards (one for the user to see,
   // and the one with the mines).
@@ -359,7 +359,7 @@ void start() {
   playAgain();
 }
 
-int main(void) {
+int minesweeper() {
 
   start();
 

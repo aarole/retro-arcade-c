@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <unistd.h>
 
-int main()
+int tictactoe()
 {
     
     //keep track of winner
@@ -141,14 +142,14 @@ int main()
             printf("Would you like to play again? 1 (Yes) | 2 (No): ");
             scanf("%d", &again);
             
-            if(again = 1)
+            if(again == 1)
             {
                 goto a;
             }
             else
             {
                 
-                exit(0);
+                return 0;
             }
             
             return 0;
