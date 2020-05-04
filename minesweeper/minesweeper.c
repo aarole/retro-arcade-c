@@ -233,6 +233,7 @@ void buildGameBoard() {
 //prints actual board
 
 void printBoard() {
+	system("clear");
 	int row, col;
 	printf("\n");
 	for (col = 0; col < MSWP_SIZE; col++)
