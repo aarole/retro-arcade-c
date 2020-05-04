@@ -16,8 +16,12 @@ The games included in this program are:
   <li>cJSON</li>
   <li>libcurl</li>
 </ul>
-The dependencies are either included with the program or are present by default on UNIX systems. 
-
+The dependencies are either included with the program or are present in the distro's official repositories<br>
+NOTE: libcurl-dev is not always installed by default
+<ul>
+<li>Ubuntu 20.04 requires installation using <i>sudo apt install libcurl4-gnutls-dev</i>
+<li>Arch linux has curl in its core, it should be installed automatically. If not, use <i>sudo pacman -S curl</i>
+</ul>
 # Downloading the program
 This program can be downloaded with:
 <ul>

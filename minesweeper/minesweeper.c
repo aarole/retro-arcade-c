@@ -1,18 +1,20 @@
+//Created by Will Grech
+//Algorithm an structure referenced from: https://cboard.cprogramming.com/c-programming/152639-simple-minesweeper-[c]-kinda-eh.html
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <time.h>
 
 //Definitions of static variables
-#define BOARD_SIZE 6
-#define TRUE 0
-#define FALSE 1
+#define MSWP_SIZE 6
+enum {TRUE, FALSE};
 
 //Global variables needed to be refrenced
 //by most of the game
 
-char board[BOARD_SIZE][BOARD_SIZE];
-char gameBoard[BOARD_SIZE][BOARD_SIZE];
+char board[MSWP_SIZE][MSWP_SIZE];
+char gameBoard[MSWP_SIZE][MSWP_SIZE];
 int lost = 0;
 
 //Creation of function prototypes
@@ -22,346 +24,365 @@ void start();
 int checkForNearMines(int, int);
 void createMines();
 void buildGameBoard();
-void playAgain();
 int playGame();
 int checkForWin();
 void printFullBoard();
 void buildBoard();
 void checkForMine(int, int);
 void printBoard();
+
 int playGame() {
-  int r_selection = 0, c_selection = 0,
-    nearbymines = 0, nearbymines2 = 0,
-    nearbymines3 = 0, nearbymines4 = 0,
-    nearbymines5 = 0, nearbymines6 = 0,
-    nearbymines7 = 0, nearbymines8 = 0,
-    i = 0;
-  do {
-    printf("\nMake a selection (ie. row [ENTER] col): \n");
-    printf("Row--> ");
-    scanf("%d", & r_selection);
-    printf("Col--> ");
-    scanf("%d", & c_selection);
+	//actual playing of the game
+	int rowSelection = 0; 
+	int colSelection = 0;
+	int	nearbymines = 0;
+	int	nearbymines2 = 0;
+	int	nearbymines3 = 0; 
+	int	nearbymines4 = 0;
+	int	nearbymines5 = 0; 
+	int	nearbymines6 = 0;
+	int	nearbymines7 = 0;
+	int	nearbymines8 = 0;
+	int	i = 0;
+	//promts user to enter a guess and makes sure that the guess is valid then asks again if not
+	do {
+		printf("\nMake your move \n");
+		printf("Column:");
+		scanf("%d", & colSelection);
+		printf("Row:");
+		scanf("%d", & rowSelection);
+		
+		if(rowSelection < 1 || rowSelection > MSWP_SIZE || colSelection < 1 || rowSelection > MSWP_SIZE){
+			printf("Enter valid values!\n");
+		}
+	} while (rowSelection < 1 || rowSelection > MSWP_SIZE || colSelection < 1 || rowSelection > MSWP_SIZE);
+	//prompts to check mines
+	checkForMine(rowSelection - 1, colSelection - 1);
+	//if lost then activate losts
+	if(lost == 1){
+		return -1;
+	}
 
-  } while (r_selection < 1 || r_selection > BOARD_SIZE || c_selection < 1 || r_selection > BOARD_SIZE);
+	nearbymines = checkForNearMines(rowSelection - 1, colSelection - 1);
+	gameBoard[rowSelection - 1][colSelection - 1] = (char)(48 + nearbymines);
 
-  checkForMine(r_selection - 1, c_selection - 1);
 
-  if (lost == 1)
-    return -1;
+	//Just goes through each of the surrounding area and checks each space to see if there are
+	//any mines then tallies those into one number.
+	//Use ASCII code of 0 (i.e. 48) and add number of nearby mines and convert to char and display
+	if (nearbymines == 0) {
+		if (colSelection != MSWP_SIZE) {
+			i = 0;
+			while (nearbymines == 0 && (colSelection - 1 + i) < MSWP_SIZE) {
+				nearbymines = checkForNearMines(rowSelection - 1, (colSelection - 1 + i));
+				if (nearbymines != -1) {
+					gameBoard[rowSelection - 1][(colSelection - 1) + i] = (char)(48 + nearbymines);
+					i++;
+				}
+			}
+			if (rowSelection != 1) {
+				i = 0;
+				while (nearbymines5 == 0 && (colSelection - 1 + i) < MSWP_SIZE && (rowSelection - 1 - i) > 0) {
+					nearbymines5 = checkForNearMines((rowSelection - 1 - i), (colSelection - 1 + i));
+					if (nearbymines5 != -1) {
+						gameBoard[(rowSelection - 1) - i][(colSelection - 1) + i] = (char)(48 + nearbymines5);
+						i++;
+					}
+				}
+			}
+			if (rowSelection != MSWP_SIZE) {
+				i = 0;
+				while (nearbymines6 == 0 && (rowSelection - 1 + i) < MSWP_SIZE && (colSelection - 1 + i) < MSWP_SIZE) {
+					nearbymines6 = checkForNearMines((rowSelection - 1 + i), (colSelection - 1 + i));
+					if (nearbymines != -1) {
+						gameBoard[(rowSelection - 1) + i][(colSelection - 1) + i] = (char)(48 + nearbymines6);
+						i++;
+					}
+				}
+			}
+		}
+		//Just makes sure its inside then checks all surrounding mines
+		if (rowSelection != MSWP_SIZE) {
+			i = 0;
+			while (nearbymines2 == 0 && (rowSelection - 1 + i) < MSWP_SIZE) {
+				nearbymines2 = checkForNearMines((rowSelection - 1 + i), colSelection - 1);
+				if (nearbymines2 != -1) {
+					gameBoard[(rowSelection - 1) + i][colSelection - 1] = (char)(48 + nearbymines2);
+					i++;
+				}
+			}
+		//same thing as above but just with collumn
+			if (colSelection != MSWP_SIZE) {
+				i = 0;
+				while (nearbymines7 == 0 && (rowSelection - 1 + i) < MSWP_SIZE && (colSelection - 1 - i) > 0) {
+						nearbymines7 = checkForNearMines((rowSelection - 1 + i), (colSelection - 1 - i));
+					if (nearbymines != -1) {
+						gameBoard[(rowSelection - 1) + i][(colSelection - 1) - i] = (char)(48 + nearbymines7);
+						i++;
+					}
+				}
+			}
+		}
+		//if the row doesn't equal 1(which is the top) then do the full sweep
+		if (rowSelection != 1) {
+			i = 0;
+			while (nearbymines3 == 0 && (rowSelection - i) > 0) {
+				nearbymines3 = checkForNearMines((rowSelection - 1 - i), colSelection - 1);
+				if (nearbymines3 != -1) {
+					gameBoard[(rowSelection - 1) - i][colSelection - 1] = (char)(48 + nearbymines3);
+					i++;
+				}
+			}
+			if (colSelection != MSWP_SIZE) {
+				while (nearbymines8 == 0 && (colSelection - 1 - i) > 0 && (rowSelection - 1 - i) > 0) {
+					nearbymines8 = checkForNearMines((rowSelection - 1 - i), (colSelection - 1 - i));
+					if (nearbymines8 != -1) {
+						gameBoard[(rowSelection - 1) - i][(colSelection - 1) - i] = (char)(48 + nearbymines8);
+						i++;
+					}
+				}
+			}
+		}
+		//same thing as above then do above
+		if (colSelection != 1) {
+			i = 0;
+			while (nearbymines4 == 0 && (colSelection - i) > 0) {
+				nearbymines4 = checkForNearMines(rowSelection - 1, (colSelection - 1 - i));
+				if (nearbymines4 != -1) {
+					gameBoard[rowSelection - 1][(colSelection - 1) - i] = (char)(48 + nearbymines4);
+					i++;
+				}
+			}
+		}
+	}
 
-  nearbymines = checkForNearMines(r_selection - 1, c_selection - 1);
-  gameBoard[r_selection - 1][c_selection - 1] = (char)(((int)
-    '0') + nearbymines);
+	// Handles a player winning.
+	if (checkForWin() == TRUE) {
+		printFullBoard();
+		printf("\n\nYou did it good job my man\n\n");
+	}
 
-  if (nearbymines == 0) {
-    if (c_selection != BOARD_SIZE) {
-      i = 0;
-      while (nearbymines == 0 && (c_selection - 1 + i) < BOARD_SIZE) {
-        nearbymines = checkForNearMines(r_selection - 1, (c_selection - 1 + i));
-        if (nearbymines != -1) {
-          gameBoard[r_selection - 1][(c_selection - 1) + i] = (char)(((int)
-            '0') + nearbymines);
-          i++;
-        }
-      }
-      if (r_selection != 1) {
-        i = 0;
-        while (nearbymines5 == 0 && (c_selection - 1 + i) < BOARD_SIZE && (r_selection - 1 - i) > 0) {
-          nearbymines5 = checkForNearMines((r_selection - 1 - i), (c_selection - 1 + i));
-          if (nearbymines5 != -1) {
-            gameBoard[(r_selection - 1) - i][(c_selection - 1) + i] = (char)(((int)
-              '0') + nearbymines5);
-            i++;
-          }
-        }
-      }
-      if (r_selection != BOARD_SIZE) {
-        i = 0;
-        while (nearbymines6 == 0 && (r_selection - 1 + i) < BOARD_SIZE && (c_selection - 1 + i) < BOARD_SIZE) {
-          nearbymines6 = checkForNearMines((r_selection - 1 + i), (c_selection - 1 + i));
-          if (nearbymines != -1) {
-            gameBoard[(r_selection - 1) + i][(c_selection - 1) + i] = (char)(((int)
-              '0') + nearbymines6);
-            i++;
-          }
-        }
-      }
-    }
-
-    if (r_selection != BOARD_SIZE) {
-      i = 0;
-      while (nearbymines2 == 0 && (r_selection - 1 + i) < BOARD_SIZE) {
-        nearbymines2 = checkForNearMines((r_selection - 1 + i), c_selection - 1);
-        if (nearbymines2 != -1) {
-          gameBoard[(r_selection - 1) + i][c_selection - 1] = (char)(((int)
-            '0') + nearbymines2);
-          i++;
-        }
-      }
-
-      if (c_selection != BOARD_SIZE) {
-        i = 0;
-        while (nearbymines7 == 0 && (r_selection - 1 + i) < BOARD_SIZE && (c_selection - 1 - i) > 0) {
-            nearbymines7 = checkForNearMines((r_selection - 1 + i), (c_selection - 1 - i));
-          if (nearbymines != -1) {
-            gameBoard[(r_selection - 1) + i][(c_selection - 1) - i] = (char)(((int)
-              '0') + nearbymines7);
-            i++;
-          }
-        }
-      }
-    }
-
-    if (r_selection != 1) {
-      i = 0;
-      while (nearbymines3 == 0 && (r_selection - i) > 0) {
-        nearbymines3 = checkForNearMines((r_selection - 1 - i), c_selection - 1);
-        if (nearbymines3 != -1) {
-          gameBoard[(r_selection - 1) - i][c_selection - 1] = (char)(((int)
-            '0') + nearbymines3);
-          i++;
-        }
-      }
-      if (c_selection != BOARD_SIZE) {
-        while (nearbymines8 == 0 && (c_selection - 1 - i) > 0 && (r_selection - 1 - i) > 0) {
-          nearbymines8 = checkForNearMines((r_selection - 1 - i), (c_selection - 1 - i));
-          if (nearbymines8 != -1) {
-            gameBoard[(r_selection - 1) - i][(c_selection - 1) - i] = (char)(((int)
-              '0') + nearbymines8);
-            i++;
-          }
-        }
-      }
-    }
-
-    if (c_selection != 1) {
-      i = 0;
-      while (nearbymines4 == 0 && (c_selection - i) > 0) {
-        nearbymines4 = checkForNearMines(r_selection - 1, (c_selection - 1 - i));
-        if (nearbymines4 != -1) {
-          gameBoard[r_selection - 1][(c_selection - 1) - i] = (char)(((int)
-            '0') + nearbymines4);
-          i++;
-        }
-      }
-    }
-  }
-
-  // Handles a player winning.
-  if (checkForWin() == TRUE) {
-
-    printFullBoard();
-    printf("\n\nCongladurations A winner IS you\n\n");
-    playAgain();
-  }
-
-  return 0;
+	return 0;
 }
 
 
 
 void buildBoard() {
-  int i, e;
-  //generate board with empty spaces
+	int i, e;
+	//generate board with empty spaces
 
-  for (i = 0; i < BOARD_SIZE; i++) {
-    for (e = 0; e < BOARD_SIZE; e++) {
-      board[i][e] = '.';
-    }
-  }
-  //Once finished, the newly made map is populated with mines
-  createMines();
+	for (i = 0; i < MSWP_SIZE; i++) {
+		for (e = 0; e < MSWP_SIZE; e++) {
+			board[i][e] = '.';
+		}
+	}
+	//Once finished, the newly made map is populated with mines
+	createMines();
 }
 
 void createMines() {
-  int i, random;
-  //seeds the srand function with the current time
-  srand(time(0));
-  //Replaces the empty spaces with randomly arranged bombs
-  for (i = 0; i < BOARD_SIZE; i++) {
-    random = rand() % (BOARD_SIZE);
-    board[random][i] = '*';
-  }
+	int i, random;
+	//seeds the srand function with the current time
+	srand(time(0));
+	//Replaces the empty spaces with randomly arranged bombs
+	for (i = 0; i < MSWP_SIZE; i++) {
+		random = rand() % (MSWP_SIZE);
+		board[random][i] = 'X';
+	}
 }
+//Goes into board and checks to see if there is any empty spaces left
+//if there arent then you win
 int checkForWin() {
-  int row, col;
+	int row, col;
+	for (row = 0; row < MSWP_SIZE; row++)
+		for (col = 0; col < MSWP_SIZE; col++) {
+			if (gameBoard[row][col] == '.' && board[row][col] != 'X')
+				return FALSE;
+		}
 
-  for (row = 0; row < BOARD_SIZE; row++)
-    for (col = 0; col < BOARD_SIZE; col++) {
-      if (gameBoard[row][col] == '.' && board[row][col] != '*')
-        return FALSE;
-    }
-
-  return TRUE;
+	return TRUE;
 }
+//Builds the board that is displayed to the player and is modified
+//built to help keep mines and all the numbers seperate
 void buildGameBoard() {
-  int i, e;
-  int row, col, cur = 4;
+	int i, e;
+	int row, col, cur = 4;
 
-  printf("Creating game board");
-  //assinging . to all board elements
-  for (i = 0; i < BOARD_SIZE; i++) {
-    for (e = 0; e < BOARD_SIZE; e++) {
-      gameBoard[i][e] = '.';
-    }
-  }
+	//assinging . to all board elements
+	for (i = 0; i < MSWP_SIZE; i++) {
+		for (e = 0; e < MSWP_SIZE; e++) {
+			gameBoard[i][e] = '.';
+		}
+	}
 
-  //prints the board
-  for (col = 0; col < BOARD_SIZE; col++) {
-    printf("%d ", col + 1);
-  }
+	//prints the board
+	for (col = 0; col < MSWP_SIZE; col++) {
+		printf("%d ", col + 1);
+	}
 
-  printf("\n");
+	printf("\n");
 
-  for (row = 0; row < BOARD_SIZE; row++) {
-    for (col = 0; col < BOARD_SIZE; col++) {
-      printf("%c ", gameBoard[row][col]);
-    }
-    printf(" %d \n", row + 1);
-  }
+	for (row = 0; row < MSWP_SIZE; row++) {
+		for (col = 0; col < MSWP_SIZE; col++) {
+			printf("%c ", gameBoard[row][col]);
+		}
+		printf(" %d \n", row + 1);
+	}
 }
 
-//prits actual board
-
-
+//prints actual board
 
 void printBoard() {
-  int row, col;
-
-  for (col = 0; col < BOARD_SIZE; col++)
-    printf("%d ", col + 1);
-
-  printf("\n\n");
-  for (row = 0; row < BOARD_SIZE; row++) {
-    for (col = 0; col < BOARD_SIZE; col++) {
-      printf("%c ", gameBoard[row][col]);
-    }
-    printf(" %d ", row + 1);
-    printf("\n");
-  }
+	int row, col;
+	printf("\n");
+	for (col = 0; col < MSWP_SIZE; col++)
+		printf("%d ", col + 1);
+	//Just loops through and printes each letter
+	printf("\n\n");
+	for (row = 0; row < MSWP_SIZE; row++) {
+		for (col = 0; col < MSWP_SIZE; col++) {
+			printf("%c ", gameBoard[row][col]);
+		}
+		printf(" %d ", row + 1);
+		printf("\n");
+	}
 }
-void checkForMine(int r_select, int c_select) {
-  if (board[r_select][c_select] == '*') {
-    printf("\nYou've hit a mine! You lose!\n");
-    getchar();
-    getchar();
-    lost = 1;
-  }
-}
-int checkForNearMines(int r_select, int c_select) {
-  int nearby_mine_count = 0;
-
-  if (board[r_select][c_select] == '*') {
-    return -1;
-  }
-  if (r_select < (BOARD_SIZE - 1) && c_select < (BOARD_SIZE - 1)) {
-    if (board[r_select + 1][c_select] == '*')
-      nearby_mine_count++;
-    if (board[r_select][c_select + 1] == '*')
-      nearby_mine_count++;
-    if (board[r_select + 1][c_select + 1] == '*')
-      nearby_mine_count++;
-    if (c_select != 0) {
-      if (board[r_select + 1][c_select - 1] == '*')
-        nearby_mine_count++;
-      if (board[r_select][c_select - 1] == '*')
-        nearby_mine_count++;
-    }
-
-    if (r_select != 0) {
-      if (board[r_select - 1][c_select] == '*')
-        nearby_mine_count++;
-      if (board[r_select - 1][c_select + 1] == '*')
-        nearby_mine_count++;
-      if (c_select != 0) {
-        if (board[r_select - 1][c_select - 1] == '*')
-          nearby_mine_count++;
-      }
-    }
-  }
-
-  if (r_select == (BOARD_SIZE - 1) && c_select != (BOARD_SIZE - 1)) {
-    if (board[r_select - 1][c_select] == '*')
-      nearby_mine_count++;
-    if (board[r_select - 1][c_select + 1] == '*')
-      nearby_mine_count++;
-  }
-
-  if (c_select == (BOARD_SIZE - 1) && r_select != (BOARD_SIZE - 1)) {
-    if (board[r_select][c_select - 1] == '*')
-      nearby_mine_count++;
-    if (board[r_select + 1][c_select - 1] == '*')
-      nearby_mine_count++;
-  }
-
-  if (r_select == (BOARD_SIZE - 1) && c_select == (BOARD_SIZE - 1)) {
-    if (board[r_select][c_select - 1] == '*')
-      nearby_mine_count++;
-    if (board[r_select - 1][c_select - 1] == '*')
-      nearby_mine_count++;
-    if (board[r_select - 1][c_select] == '*')
-      nearby_mine_count++;
-  }
-
-  return nearby_mine_count;
+//checks for mine on the co-ord provided
+void checkForMine(int rowSelect, int colSelect) {
+	if (board[rowSelect][colSelect] == 'X') {
+		printf("\nYou've hit a mine! You lose!\n");
+		printf("==================================\n\n");
+		lost = 1;
+		//makes the person lose if there is a mine
+	}
 }
 
+//checks for nearby mines
+int checkForNearMines(int rowSelect, int colSelect) {
+	int nearbyMineCount = 0;
+	//Will increment it^
+	if (board[rowSelect][colSelect] == 'X') {
+		return -1;
+	}
+	//Checks every space
+	if (rowSelect < (MSWP_SIZE - 1) && colSelect < (MSWP_SIZE - 1)) {
+		if (board[rowSelect + 1][colSelect] == 'X'){
+			nearbyMineCount++;
+		}
+		if (board[rowSelect][colSelect + 1] == 'X'){
+			nearbyMineCount++;
+		}
+		if (board[rowSelect + 1][colSelect + 1] == 'X'){
+			nearbyMineCount++;
+		}
+		if (colSelect != 0) {
+			if (board[rowSelect + 1][colSelect - 1] == 'X'){
+				nearbyMineCount++;
+			}
+			if (board[rowSelect][colSelect - 1] == 'X'){
+				nearbyMineCount++;
+			}
+		}
+
+		if (rowSelect != 0) {
+			if (board[rowSelect - 1][colSelect] == 'X'){
+				nearbyMineCount++;
+			}
+			if (board[rowSelect - 1][colSelect + 1] == 'X'){
+				nearbyMineCount++;
+			}
+			if (colSelect != 0) {
+				if (board[rowSelect - 1][colSelect - 1] == 'X'){
+					nearbyMineCount++;
+				}
+			}
+		}
+	}
+//also checking spots
+	if (rowSelect == (MSWP_SIZE - 1) && colSelect != (MSWP_SIZE - 1)) {
+		if (board[rowSelect - 1][colSelect] == 'X'){
+			nearbyMineCount++;
+		}
+		if (board[rowSelect - 1][colSelect + 1] == 'X'){
+			nearbyMineCount++;
+		}
+	}
+
+	if (colSelect == (MSWP_SIZE - 1) && rowSelect != (MSWP_SIZE - 1)) {
+		if (board[rowSelect][colSelect - 1] == 'X')
+			nearbyMineCount++;
+		if (board[rowSelect + 1][colSelect - 1] == 'X')
+			nearbyMineCount++;
+	}
+
+	if (rowSelect == (MSWP_SIZE - 1) && colSelect == (MSWP_SIZE - 1)) {
+		if (board[rowSelect][colSelect - 1] == 'X'){
+			nearbyMineCount++;
+		}
+		if (board[rowSelect - 1][colSelect - 1] == 'X'){
+			nearbyMineCount++;
+		}
+		if (board[rowSelect - 1][colSelect] == 'X'){
+			nearbyMineCount++;
+		}
+	}
+
+	return nearbyMineCount;
+}
+//prints board that the player is shown
 void printFullBoard() {
-  int row, col;
-  for (col = 0; col < BOARD_SIZE; col++)
-    printf("%d ", col + 1);
+	int row, col;
+	printf("\n");
+	for (col = 0; col < MSWP_SIZE; col++){
+		printf("%d ", col + 1);
+	}
 
-  printf("\n");
-  for (row = 0; row < BOARD_SIZE; row++) {
-    for (col = 0; col < BOARD_SIZE; col++) {
-      printf("%c ", board[row][col]);
-    }
-    printf(" %d\n", row + 1);
+	printf("\n");
+	for (row = 0; row < MSWP_SIZE; row++) {
+		for (col = 0; col < MSWP_SIZE; col++) {
+			printf("%c ", board[row][col]);
+		}
+		printf(" %d\n", row + 1);
 
-  }
-}
-
-
-
-
-void playAgain() {
-  char ans;
-
-  printf("\n\nWould you like to play again? (y/n) --> ");
-  scanf(" %c", & ans);
-
-  if (toupper(ans) == 'Y') {
-
-    start();
-  } else {
-    printf("\n\nThanks for playing! Bye.\n");
-    return;
-  }
+	}
 }
 
 void start() {
-  system("clear");
-  lost = 0; // User hasn't lost yet
-  // Build both game boards (one for the user to see,
-  // and the one with the mines).
-  buildBoard();
-  buildGameBoard();
+	system("clear");
+	lost = 0; // User hasn't lost yet
+	// Build both game boards (one for the user to see,
+	// and the one with the mines).
+	buildBoard();
+	buildGameBoard();
 
-  // Start playing game
-  do {
-    playGame();
-    printBoard();
-  } while (lost != 1); // While the user hasn't lost, loop.
+	// Start playing game
+	do {
+		playGame();
+		if(lost != 1){
+			printBoard();
+		}
+	} while (lost != 1); // While the user hasn't lost, loop.
 
-  // Once user is lost, print the board with all the mines.
-  printFullBoard();
-  playAgain();
+	// Once user is lost, print the board with all the mines.
+	printFullBoard();
 }
 
 int minesweeper() {
 
-  start();
+	//Infinite loop for the driver function
+	while(1){
+		//Run the game
+		start();
+		int choice = 1;
 
-  return 0;
+		//Break out of the infinite loop if the user wants to quit
+		printf("\n\nRestart? (1 for yes, 2 for no): ");
+		scanf("%d", &choice);
+
+		if(choice == 2) {
+			break;
+		}
+	}
+
+	return 0;
 }

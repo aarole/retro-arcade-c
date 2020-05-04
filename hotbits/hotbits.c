@@ -58,7 +58,3 @@ int get_rand()
 
 	return randint;
 }
-/*
-void main(){
-	printf("%d",get_rand());
-}*/

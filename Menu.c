@@ -1,7 +1,8 @@
+//Created by Zixiao Li
+
 //import games and header files
 #include "./pacman/pacman.c"
 #include "./tictactoe/tic-tac-toe.c"
-//#include "./snake/snake.c"
 #include "./minesweeper/minesweeper.c"
 #include "./rps/RPS.c"
 #include "./json/ext_time.c"

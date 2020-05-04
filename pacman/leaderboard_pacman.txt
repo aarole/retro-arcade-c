@@ -1,5 +1,0 @@
-Aditya 37 2020-03-03 Monday
-Resul 23 2020-03-04 Tuesday
-Sean 13 2020-03-05 Wednesday
-WillG 36 2020-03-06 Thursday
-WillW 45 2020-03-07 Friday

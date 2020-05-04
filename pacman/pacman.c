@@ -1,3 +1,6 @@
+//Created by Aditya Arole
+
+//Include header files
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -5,8 +8,10 @@
 #include<time.h>
 #include<stdbool.h>
 
+//Create variable to store the map size
 #define SIZE 30
 
+//Create fuction prototypes
 char get_input();
 void print_map(char [SIZE][SIZE], int );
 int is_valid(char [SIZE][SIZE], int , int );
@@ -27,18 +32,7 @@ void green();
 void yellow();
 void reset();
 
-struct Record{
-	char name[30];
-	int score;
-	char date[10];
-	char day[10];
-};
-
-struct Node{
-	struct Record data;
-	struct Node* next;
-};
-
+//Function that gets user input without echoing it
 char get_input(){
 	char input;
 	
@@ -51,12 +45,14 @@ char get_input(){
 	return input;
 }
 
+//Function to print the map in its current state
 void print_map(char lcl_map[SIZE][SIZE], int pts){
 	system("clear");
 	generate_point(lcl_map);
 	generate_ghost(lcl_map,pts);
 	printf("	Points: %d\n\n", pts);
 
+	//Print the player in yellow, point in green and wall in red
 	for(int i = 0; i < SIZE; i++){
 		for(int j = 0; j < SIZE; j++){
 			char pt = lcl_map[i][j];
@@ -85,6 +81,7 @@ void print_map(char lcl_map[SIZE][SIZE], int pts){
 	}
 }
 
+//Check if the player's move is valid
 int is_valid(char lcl_map[SIZE][SIZE], int r, int c){
 	if(r>=0 && r<SIZE && c>=0 && c<SIZE && (lcl_map[r][c] == ' ' || lcl_map[r][c] == 'o') && lcl_map[r][c] != 'G'){
 		return 1;
@@ -93,17 +90,20 @@ int is_valid(char lcl_map[SIZE][SIZE], int r, int c){
 	return 0;
 }
 
+//Move the player to a defined point
 int move(char lcl_map[SIZE][SIZE], int r, int c, int p){
 	system("clear");
 	lcl_map[r][c] = 'P';
 	print_map(lcl_map, p);
 }
 
+//Generate a point in the map
 int generate_point(char lcl_map[SIZE][SIZE]){
 	int exists = 0;
 	int p_row = 0;
 	int p_col = 0;
 
+	//Get the player's coordinates
 	for(int i = 0; i < SIZE; i++){
 		for(int j = 0; j < SIZE; j++){
 			if(lcl_map[i][j] == 'P'){
@@ -117,6 +117,7 @@ int generate_point(char lcl_map[SIZE][SIZE]){
 		}
 	}
 
+	//Check if there is already a point
 	for(int i = 0; i < SIZE; i++){
 		for(int j = 0; j < SIZE; j++){
 			if(lcl_map[i][j] == 'o'){
@@ -132,6 +133,7 @@ int generate_point(char lcl_map[SIZE][SIZE]){
 	int row = 0;
 	int col = 0;
 
+	//Generate a point 3 spaces away from the player (if there isn't one already)
 	if(!exists){
 		while(true){
 			row = (rand() % (SIZE + 1));
@@ -147,11 +149,13 @@ int generate_point(char lcl_map[SIZE][SIZE]){
 	}
 }
 
+//Generate a ghost on the map
 void generate_ghost(char lcl_map[SIZE][SIZE], int points){
 	int count = 0;
 	int p_row = 0;
 	int p_col = 0;
 
+	//Get the player's coordinates
 	for(int i = 0; i < SIZE; i++){
 		for(int j = 0; j < SIZE; j++){
 			if(lcl_map[i][j] == 'P'){
@@ -164,6 +168,7 @@ void generate_ghost(char lcl_map[SIZE][SIZE], int points){
 			break;
 		}
 	}
+	//Count the number of ghosts in the map
 	for(int k = 0; k < SIZE; k++){
 		for(int l = 0; l < SIZE; l++){
 			if(lcl_map[k][l] == 'G'){
@@ -175,6 +180,7 @@ void generate_ghost(char lcl_map[SIZE][SIZE], int points){
 	int row = 0;
 	int col = 0;
 
+	//Generate 1 ghost 5 spaces away after the player crosses 3 and 6 points
 	if(((points > 3 && points <= 6) && count == 4) || ((points > 6) && count == 5)){
 		while(true){
 			row = (rand() % (SIZE + 1));
@@ -190,6 +196,7 @@ void generate_ghost(char lcl_map[SIZE][SIZE], int points){
 	}
 }
 
+//Check if the player is caught
 int player_caught(char lcl_map[SIZE][SIZE], int r, int c){
 	if(lcl_map[r+1][c] == 'G' || 
 	lcl_map[r-1][c] == 'G' ||
@@ -205,6 +212,7 @@ int player_caught(char lcl_map[SIZE][SIZE], int r, int c){
 	}
 }
 
+//Function to get the player's current coordinates
 void get_player_loc(char lcl_map[SIZE][SIZE], int temp[2]){
 	for(int i = 0; i < SIZE; i++){
 		for(int j = 0; j < SIZE; j++){
@@ -217,6 +225,7 @@ void get_player_loc(char lcl_map[SIZE][SIZE], int temp[2]){
 	}
 }
 
+//Check if the ghost's move is valid
 int ghost_valid(char lcl_map[SIZE][SIZE], int r, int c){
 	if(r>=0 && r<SIZE && c>=0 && c<SIZE && (lcl_map[r][c] == 'o' || lcl_map[r][c] == ' ')){
 		return 1;
@@ -225,6 +234,7 @@ int ghost_valid(char lcl_map[SIZE][SIZE], int r, int c){
 	return 0;
 }
 
+//Move the ghost randomly based on where it is blocked off
 char prev = 'o';
 void alt_move(char lcl_map[SIZE][SIZE], int r, int c){
 	//Bottom and left
@@ -277,28 +287,7 @@ void alt_move(char lcl_map[SIZE][SIZE], int r, int c){
 	}
 }
 
-/*
-int start = 0;
-void move_ghost(char lcl_map[SIZE][SIZE], int r, int c){
-	int choice = get_rand(1, 4);
-	if(ghost_valid(lcl_map, r, c)){
-		if(choice == 1){
-			ghost_left(lcl_map,r,c);
-		}
-		if(choice == 2){
-			ghost_right(lcl_map,r,c);
-		}
-		if(choice == 3){
-			ghost_down(lcl_map,r,c);
-		}
-		else{
-			ghost_up(lcl_map,r,c);
-		}
-	}
-
-
-}*/
-
+//Move the ghost based on its previous move
 void move_ghost(char lcl_map[SIZE][SIZE], int r, int c){
 	
 	if(prev == 's'){
@@ -343,7 +332,7 @@ void move_ghost(char lcl_map[SIZE][SIZE], int r, int c){
 	
 }
 
-
+//Move the ghost down, move two spaces if a point exists
 int ghost_down(char lcl_map[SIZE][SIZE], int r, int c){
 	if(ghost_valid(lcl_map, r+1, c)){
 		lcl_map[r][c] = ' ';
@@ -365,6 +354,7 @@ int ghost_down(char lcl_map[SIZE][SIZE], int r, int c){
 	}
 }
 
+//Move the ghost up, move two spaces if a point exists
 int ghost_up(char lcl_map[SIZE][SIZE], int r, int c){
 	if(ghost_valid(lcl_map, r-1, c)){
 		lcl_map[r][c] = ' ';
@@ -386,6 +376,7 @@ int ghost_up(char lcl_map[SIZE][SIZE], int r, int c){
 	}
 }
 
+//Move the ghost left, move two spaces if a point exists
 int ghost_left(char lcl_map[SIZE][SIZE], int r, int c){
 	if(ghost_valid(lcl_map, r, c-1)){
 		lcl_map[r][c] = ' ';
@@ -407,6 +398,7 @@ int ghost_left(char lcl_map[SIZE][SIZE], int r, int c){
 	}
 }
 
+//Move the ghost right, move two spaces if a point exists
 int ghost_right(char lcl_map[SIZE][SIZE], int r, int c){
 	if(ghost_valid(lcl_map, r, c+1)){
 		lcl_map[r][c] = ' ';
@@ -428,59 +420,40 @@ int ghost_right(char lcl_map[SIZE][SIZE], int r, int c){
 		lcl_map[r][c] = 'G';
 	}
 }
-/*
-void place_ghost(char lcl_map[SIZE][SIZE], int p[2]){
-	int randx = get_rand();
-	int randy = get_rand();
 
-	int p_x = p[0];
-	int p_y = p[1];
-
-	int x_rad = abs((randx-p_x));
-	int y_rad = abs((randy-p_y));
-
-	while(true){
-		for(int i = 3; i < SIZE; i++){
-			if(randx % i == 0){
-				for(int j = 3; j < SIZE; j++){
-					if(randy % j == 0){
-						if(lcl_map[i][j] != 'P' && lcl_map[i][j] != 'G' && lcl_map[i][j] != '#' && x_rad > 3 && y_rad > 3){
-							lcl_map[randx][randy] = 'G';
-						}
-					}
-				}
-			}
-		}
-	}
-	
-}*/
-
+//Make the terminal yellow
 void yellow(){
 	printf("\033[1;33m");
 }
 
+//Make the terminal red
 void red(){
 	printf("\033[1;31m");
 }
 
+//Make the terminal green
 void green(){
 	printf("\033[1;32m");
 }
 
+//Reset the terminal's color
 void reset(){
 	printf("\033[0m");
 	printf("\e[0m");
 }
 
+//Driver function
 int pacman(){
+	//String to store the players name
 	char player[25];
-	struct Node* head = (struct Node*)malloc(sizeof(struct Node));
 
 	while(true){
+		//Refresh the screen
 		system("clear");
 		//New row: {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'}
 		//New col: ,' ',' ',' ',' ','#'
 
+		//Two-dimensional array to store the map
 		char map[SIZE][SIZE] = { {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
 								 {'#',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ','#'},
 								 {'#',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ','#'},
@@ -516,70 +489,22 @@ int pacman(){
 		int moves = 0;
 
 		int coord[2];
-
+		//Store player's starting coordinates
 		get_player_loc(map, coord);
 
 		int row = coord[0];
 		int column = coord[1];
 
+		//Get player's name
 		printf("Player name (no spaces): ");
 		scanf("%s", &player);
 
-		/*
-		FILE* leaderboard;
-		leaderboard = fopen("leaderboard_pacman.txt","r");
-		char buffer[255];
-		
-		if(leaderboard == NULL){
-			printf("Error: Leaderboard file not opened.\n");
-			return 1;
-		}
-		else{
-			printf("File opened.\n");
-		}
-
-		char *names[5];
-		int scores[5];
-		char *dates[5];
-		char *days[5];
-		
-		int i = 0;
-		while(fgets(buffer,255,leaderboard) != NULL){
-			char delim[] = " ";
-			char *ptr = strtok(buffer,delim);
-			char *data[4];
-			int z = 0;
-			while(ptr){
-				data[z++] = ptr;
-				ptr = strtok(NULL,delim);
-			}
-			
-			strcpy(names[i],data[0]);
-			scores[i] = atoi(data[1]);
-			strcpy(dates[i], data[2]);
-			strcpy(days[i], data[3]);
-			printf("%s %d %s %s",names[i++],scores[i++],dates[i++],days[i++]);
-			//sscanf(buffer, "%s %s %s %s", names[i], scores[i], dates[i],days[i]);
-			i++;
-		}
-		//exit(0);
-		/*while(fgets(buffer,255,leaderboard)){
-			sscanf(buffer,"%s %d %s %s",&names[i],&scores[i],&dates[i],&days[i]);
-			i++;
-		}
-		printf("\nName\tScore\tAchievement Date and Day\n");
-		int f = 0;
-		while(f<5){
-			printf("%s %d %s %s\n",names[f++],scores[f++],dates[f++],days[f++]);
-		}
-		exit(0);
-
-		*/
-
+		//Begin stopwatch
 		time_t start = time(NULL);
 
 		int caught = 0;
 		
+		//Make the ghosts' first move
 		for(int a = 0; a < SIZE; a++){
 			for(int b = 0; b < SIZE; b++){
 				if(map[a][b] == 'G'){
@@ -590,17 +515,22 @@ int pacman(){
 			}
 		}
 
+		//Loop till the user reaches 10 points
 		while(points != 10){
+			//Get user input
 			char x = get_input();
 			print_map(map, points);
 
+			//Switch case to determine input
 			switch (x){
 				//Move up
 				case 'w':{
+					//Check if caught
 					if(player_caught(map, row, column)){
 						caught = 1;
 						break;
 					}
+					//Move ghost
 					for(int a = 0; a < SIZE; a++){
 						for(int b = 0; b < SIZE; b++){
 							if(map[a][b] == 'G'){
@@ -610,6 +540,7 @@ int pacman(){
 							}
 						}
 					}
+					//Make move
 					if(is_valid(map, row-1, column)){
 						if(map[row-1][column] == 'o'){
 							points++;
@@ -625,10 +556,12 @@ int pacman(){
 				}
 				//Move left
 				case 'a':{
+					//Check if caught
 					if(player_caught(map, row, column)){
 						caught = 1;
 						break;
 					}
+					//Move ghost
 					for(int a = 0; a < SIZE; a++){
 						for(int b = 0; b < SIZE; b++){
 							if(map[a][b] == 'G'){
@@ -638,6 +571,7 @@ int pacman(){
 							}
 						}
 					}
+					//Make move
 					if(is_valid(map, row, column-1)){
 						if(map[row][column-1] == 'o'){
 							points++;
@@ -656,10 +590,12 @@ int pacman(){
 				}
 				//Move down
 				case 's':{
+					//Check if caught
 					if(player_caught(map, row, column)){
 						caught = 1;
 						break;
 					}
+					//Move ghost
 					for(int a = 0; a < SIZE; a++){
 						for(int b = 0; b < SIZE; b++){
 							if(map[a][b] == 'G'){
@@ -669,6 +605,7 @@ int pacman(){
 							}
 						}
 					}
+					//make move
 					if(is_valid(map, row+1, column)){
 						if(map[row+1][column] == 'o'){
 							points++;
@@ -687,10 +624,12 @@ int pacman(){
 				}
 				//Move right
 				case 'd':{
+					//Check if caught
 					if(player_caught(map, row, column)){
 						caught = 1;
 						break;
 					}
+					//Move ghost
 					for(int a = 0; a < SIZE; a++){
 						for(int b = 0; b < SIZE; b++){
 							if(map[a][b] == 'G'){
@@ -700,6 +639,7 @@ int pacman(){
 							}
 						}
 					}
+					//Make move
 					if(is_valid(map, row, column+1)){
 						if(map[row][column+1] == 'o'){
 							points++;
@@ -720,56 +660,22 @@ int pacman(){
 					break;
 				}
 			}
-
+			//Break out of the loop if the user is caught
 			if(caught){
 				break;
 			}
 		}
-
+		//Stop time
 		time_t end = time(NULL);
 
+		//Print score if the user is not caught
 		if(!caught){
 			int score = (int)(end-start);
 			printf("\nGame Complete\n");
 			printf("%s's score: %d seconds\n", player, score);
-
-			/*
-			char cdate[10];
-			char* cday;
-			get_date(cdate, cday);
-			int owpos = 0;
-			for(int a = 0; a < 5; a++){
-				if(score < scores[a]){
-					owpos = a;
-				}
-			}
-			for(int b = 4; b > (5 - (owpos + 1)); b--){
-				names[b] = names[b-1];
-				scores[b] = scores[b-1];
-				dates[b] = dates[b-1];
-				days[b] = days[b-1];
-			}
-			names[owpos] = player;
-			scores[owpos] = score;
-			dates[owpos] = cdate;
-			days[owpos] = cday;
-			printf("\n==============================");
-			printf("\n\tLeaderboard:");
-			printf("\n==============================");
-
-			printf("\nName\tScore\tAchievement Date and Day");
-			for(int c = 0; c < 5; c++){
-				printf("\n%s\t%d\t%s\t%s",names[i],scores[i],dates[i],days[i]);
-			}
-			fclose(leaderboard);
-			leaderboard = fopen("leaderboard_pacman.txt","w");
-			for(int d = 0; d < 5; d++){
-				fprintf(leaderboard,"%s %d %s %s",player,score,cdate,cday);
-			}
-			fclose(leaderboard);
-			*/
 		}
 
+		//Check if user wants to restart
 		printf("\nRestart? (y/n): \n");
 
 		if(getchar() == 'n'){

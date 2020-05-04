@@ -1,40 +1,49 @@
+//Created by Will Woo
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include "../hotbits/hotbits.c"
 
-//global counters for score
+// Global counters for score
 int playerScore = 0;
 int computerScore = 0;
-//method for rps
+// Method for rps
 void RPS(char input[10])
 {
+    // Runs through user inputs and makes every letter lowercase to make it not matter if it's in different cases
     for(int i =0; i< 10; i++)
     {
       input[i]= tolower(input[i]);
     }
+
+    // Varible that will store the user's input as a number so it's easier to compare them to the computer.
     int conversion = 0;
+
+    // Generates computer's input as a number that will be used later to compare to the user's input.
     int computer = ((get_rand() % 3) + 1);
-    //changes player input to an interger
-    if (strcmp(input,"rock") ==0)
+    
+    // Changes player input to an interger by comparing them to either rock, paper, or scissors and changing conversions to correspond with the correct number.
+    if (strcmp(input,"rock")==0)
     {
         conversion = 1;
     }
-    else if(strcmp(input,"paper") ==0)
+    else if(strcmp(input,"paper")==0)
     {
         conversion = 2;
     }
-    else if(strcmp(input,"scissors") == 0)
+    else if(strcmp(input,"scissors")==0)
     {
         conversion = 3;
     }
-    else{
-    	printf("Please try again.\n");
-	return;
+    else
+    {
+        printf("Please try again.\n");
+	    return;
     }
 
-    //check whether the player tied, loss, or won
+    // Checks whether the player tied, loss, or won
     if (computer == conversion)
     {
         printf("You and the computer tied\n");
@@ -76,7 +85,7 @@ void RPS(char input[10])
         printf("You beat the computer\n");
         playerScore++;
     }   
-    //in case error
+    // In case there is an error with computer generating number outside of 1-3
     else
     {
         printf("There was an error please try again\n");
@@ -86,8 +95,9 @@ void RPS(char input[10])
 
 int rockpaperscissors()
 {
-    //storage for input
+    // Storage for input.
     char input[10];
+    // Varible for user's input whether they want to play again
     int yesNo;
     system("clear");
     printf("\nWelcome to RPS \n");
@@ -97,7 +107,7 @@ int rockpaperscissors()
     RPS(input);
     printf("The current score is %d - %d\n", playerScore, computerScore);
     printf("\nWould you like to play again? (1 for Yes, 2 for No): ");
-    //player input for continued play
+    // Player input for continued play
     scanf("%d", &yesNo);
     if (yesNo == 2)
     {
